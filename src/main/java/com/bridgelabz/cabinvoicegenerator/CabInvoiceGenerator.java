@@ -9,9 +9,12 @@ public class CabInvoiceGenerator {
         System.out.println("Welcome To Cab Invoice Generator");
     }
 
-    //METHOD TO GET TRAVEL FARE
-    public double getTravelFare(double travelDistanceInKM, double travelTimeInMinutes) {
-        double totalTravelFareInRS = (travelDistanceInKM * COST_PER_KILOMETER_IN_RS) + (travelTimeInMinutes * COST_PER_MINUTE_IN_RS);
+    //METHOD TO GET TRAVEL FARE FOR MULTIPLE RIDES
+    public double getTravelFare(Rides[] rides) {
+        double totalTravelFareInRS = 0;
+        for (Rides ride : rides) {
+            totalTravelFareInRS = totalTravelFareInRS + (ride.travelDistanceInKM * COST_PER_KILOMETER_IN_RS) + (ride.travelTimeInMinutes * COST_PER_MINUTE_IN_RS);
+        }
         return Math.max(totalTravelFareInRS, MINIMUM_TRAVEL_FARE_IN_RS);
     }
 }
