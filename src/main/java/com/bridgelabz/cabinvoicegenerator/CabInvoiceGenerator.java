@@ -17,4 +17,10 @@ public class CabInvoiceGenerator {
         }
         return Math.max(totalTravelFareInRS, MINIMUM_TRAVEL_FARE_IN_RS);
     }
+
+    //METHOD TO GET INVOICE SUMMERY
+    public InvoiceSummery getInvoiceSummery(Rides[] rides) {
+        double totalTravelFareInRS = getTravelFare(rides);
+        return new InvoiceSummery(rides.length, totalTravelFareInRS);
+    }
 }
