@@ -3,10 +3,9 @@ package com.bridgelabz.cabinvoicegenerator;
 public class CabInvoiceGenerator {
 
     //CONSTANTS
-    public static final double COST_PER_KILOMETER_IN_RS = 10;
-    public static final double COST_PER_MINUTE_IN_RS = 1;
-    private static final double MINIMUM_TRAVEL_FARE_IN_RS = 5;
-
+    public static double COST_PER_KILOMETER_IN_RS;
+    public static double COST_PER_MINUTE_IN_RS;
+    private static double MINIMUM_TRAVEL_FARE_IN_RS;
     RideRepository rideRepository;
 
     public CabInvoiceGenerator() {
@@ -17,25 +16,31 @@ public class CabInvoiceGenerator {
         System.out.println("Welcome To Cab Invoice Generator");
     }
 
-    //METHOD TO GET TRAVEL FARE FOR MULTIPLE RIDES
-    public double getTravelFare(Rides[] rides) {
-        double totalTravelFareInRS = 0;
-        for (Rides ride : rides) {
-            totalTravelFareInRS = totalTravelFareInRS + (ride.travelDistanceInKM * COST_PER_KILOMETER_IN_RS) + (ride.travelTimeInMinutes * COST_PER_MINUTE_IN_RS);
-        }
+    //METHOD TO GET TRAVEL FARE
+    public double getTravelFare(RideType rideType, double distance, double time) {
+        setValue(rideType);
+        double totalTravelFareInRS = distance * COST_PER_KILOMETER_IN_RS + time * COST_PER_MINUTE_IN_RS;
         return Math.max(totalTravelFareInRS, MINIMUM_TRAVEL_FARE_IN_RS);
     }
 
-    //METHOD TO GET INVOICE SUMMERY BY PASSING RIDES
-    public InvoiceSummery getInvoiceSummery(Rides[] rides) {
-        double totalTravelFareInRS = getTravelFare(rides);
-        return new InvoiceSummery(rides.length, totalTravelFareInRS);
+    //METHOD TO SET THE RATE OF RIDE CATEGORY
+    private void setValue(RideType rideType) {
+        COST_PER_KILOMETER_IN_RS = rideType.costPerKilometerInRs;
+        COST_PER_MINUTE_IN_RS = rideType.costPerMinuteInRs;
+        MINIMUM_TRAVEL_FARE_IN_RS = rideType.minimumTravelFareInRs;
     }
 
     //METHOD TO GET INVOICE SUMMERY BY PASSING USER ID
     public InvoiceSummery getInvoiceSummery(String userId) {
-        Rides[] rideList = rideRepository.getRideList(userId);
-        double totalTravelFareInRS = getTravelFare(rideList);
+        return generateInvoiceSummery(rideRepository.getRideList(userId));
+    }
+
+    //METHOD TO GENERATE INVOICE SUMMERY
+    private InvoiceSummery generateInvoiceSummery(Rides[] rideList) {
+         double totalTravelFareInRS = 0;
+        for (Rides rides : rideList) {
+            totalTravelFareInRS = totalTravelFareInRS + getTravelFare(rides.rideType, rides.travelDistanceInKM, rides.travelTimeInMinutes);
+        }
         return new InvoiceSummery(rideList.length, totalTravelFareInRS);
     }
 
