@@ -31,13 +31,13 @@ public class CabInvoiceGenerator {
     }
 
     //METHOD TO GET INVOICE SUMMERY BY PASSING USER ID
-    public InvoiceSummery getInvoiceSummery(String userId) {
+    public InvoiceSummery getInvoiceSummery(String userId) throws CabInvoiceGeneratorException {
         return generateInvoiceSummery(rideRepository.getRideList(userId));
     }
 
     //METHOD TO GENERATE INVOICE SUMMERY
     private InvoiceSummery generateInvoiceSummery(Rides[] rideList) {
-         double totalTravelFareInRS = 0;
+        double totalTravelFareInRS = 0;
         for (Rides rides : rideList) {
             totalTravelFareInRS = totalTravelFareInRS + getTravelFare(rides.rideType, rides.travelDistanceInKM, rides.travelTimeInMinutes);
         }

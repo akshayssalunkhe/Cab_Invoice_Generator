@@ -14,7 +14,12 @@ public class RideRepository {
         rideList.put(userId, rides);
     }
 
-    public Rides[] getRideList(String userId) {
-        return rideList.get(userId);
+    public Rides[] getRideList(String userId) throws CabInvoiceGeneratorException {
+        if (userId == null)
+            throw new CabInvoiceGeneratorException("Enter Valid User Id");
+        if (userId.equals(rideList.get(userId)))
+            return rideList.get(userId);
+        else
+            throw new CabInvoiceGeneratorException("Given Incorrect User Id");
     }
 }
