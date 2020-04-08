@@ -1,9 +1,6 @@
 package com.bridgelabz.cabinvoicegeneratortest;
 
-import com.bridgelabz.cabinvoicegenerator.CabInvoiceGenerator;
-import com.bridgelabz.cabinvoicegenerator.InvoiceSummery;
-import com.bridgelabz.cabinvoicegenerator.RideType;
-import com.bridgelabz.cabinvoicegenerator.Rides;
+import com.bridgelabz.cabinvoicegenerator.*;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -27,7 +24,12 @@ public class CabInvoiceGeneratorTest {
     public void givenDistanceAndTimeOfTravelForMultipleRides_ShouldReturnTheTotalTravelFare() {
         Rides[] rides = {new Rides(0.5, 0, RideType.NORMAL), new Rides(5, 10, RideType.PREMIUM)};
         cabInvoiceGenerator.addRides("User_NO_1", rides);
-        InvoiceSummery invoiceSummery = cabInvoiceGenerator.getInvoiceSummery("User_NO_1");
+        InvoiceSummery invoiceSummery = null;
+        try {
+            invoiceSummery = cabInvoiceGenerator.getInvoiceSummery("User_NO_1");
+        } catch (CabInvoiceGeneratorException e) {
+            e.printStackTrace();
+        }
         Assert.assertEquals(100, invoiceSummery.totalTravelFareInRS, 0);
     }
 
@@ -35,7 +37,12 @@ public class CabInvoiceGeneratorTest {
     public void givenMultipleRides_GenerateTotalFare_ShouldReturnInvoiceSummery() {
         Rides[] rides = {new Rides(0.50, 0, RideType.NORMAL), new Rides(5, 10, RideType.PREMIUM)};
         cabInvoiceGenerator.addRides("User_NO_1", rides);
-        InvoiceSummery invoiceSummery = cabInvoiceGenerator.getInvoiceSummery("User_NO_1");
+        InvoiceSummery invoiceSummery = null;
+        try {
+            invoiceSummery = cabInvoiceGenerator.getInvoiceSummery("User_NO_1");
+        } catch (CabInvoiceGeneratorException e) {
+            e.printStackTrace();
+        }
         InvoiceSummery expectedSummery = new InvoiceSummery(2, 100);
         Assert.assertEquals(expectedSummery, invoiceSummery);
     }
@@ -44,7 +51,12 @@ public class CabInvoiceGeneratorTest {
     public void givenUserId_GenerateTotalFare_ShouldReturnInvoiceSummery() {
         Rides[] rides = {new Rides(0.50, 0, RideType.NORMAL), new Rides(5, 10, RideType.PREMIUM)};
         cabInvoiceGenerator.addRides("User_No_1", rides);
-        InvoiceSummery invoiceSummery = cabInvoiceGenerator.getInvoiceSummery("User_No_1");
+        InvoiceSummery invoiceSummery = null;
+        try {
+            invoiceSummery = cabInvoiceGenerator.getInvoiceSummery("User_No_1");
+        } catch (CabInvoiceGeneratorException e) {
+            e.printStackTrace();
+        }
         InvoiceSummery expectedSummery = new InvoiceSummery(2, 100);
         Assert.assertEquals(expectedSummery, invoiceSummery);
     }
@@ -53,7 +65,12 @@ public class CabInvoiceGeneratorTest {
     public void givenDistanceAndTimeWithNormalRideType_GenerateTotalFare_ShouldReturnTheTotalTravelFare() {
         Rides[] rides = new Rides[]{new Rides(100, 30, RideType.NORMAL)};
         cabInvoiceGenerator.addRides("User_No_1", rides);
-        InvoiceSummery invoiceSummery = cabInvoiceGenerator.getInvoiceSummery("User_No_1");
+        InvoiceSummery invoiceSummery = null;
+        try {
+            invoiceSummery = cabInvoiceGenerator.getInvoiceSummery("User_No_1");
+        } catch (CabInvoiceGeneratorException e) {
+            e.printStackTrace();
+        }
         InvoiceSummery expectedSummery = new InvoiceSummery(1, 1030);
         Assert.assertEquals(expectedSummery, invoiceSummery);
     }
@@ -62,8 +79,26 @@ public class CabInvoiceGeneratorTest {
     public void givenDistanceAndTimeWithPremiumRideType_GenerateTotalFare_ShouldReturnTheTotalTravelFare() {
         Rides[] rides = {new Rides(50, 12.5, RideType.PREMIUM)};
         cabInvoiceGenerator.addRides("User_No_2", rides);
-        InvoiceSummery invoiceSummery = cabInvoiceGenerator.getInvoiceSummery("User_No_2");
+        InvoiceSummery invoiceSummery = null;
+        try {
+            invoiceSummery = cabInvoiceGenerator.getInvoiceSummery("User_No_2");
+        } catch (CabInvoiceGeneratorException e) {
+            e.printStackTrace();
+        }
         InvoiceSummery expectedSummery = new InvoiceSummery(1, 775);
         Assert.assertEquals(expectedSummery, invoiceSummery);
+    }
+
+    @Test
+    public void givenUserIdAsNull_ShouldThrowCustomException() {
+        try {
+            Rides[] rides = {new Rides(50, 12.5, RideType.PREMIUM)};
+            cabInvoiceGenerator.addRides(null, rides);
+            InvoiceSummery invoiceSummery = cabInvoiceGenerator.getInvoiceSummery(null);
+            InvoiceSummery expectedSummery = new InvoiceSummery(1, 775);
+            Assert.assertEquals(expectedSummery, invoiceSummery);
+        } catch (CabInvoiceGeneratorException e) {
+            e.printStackTrace();
+        }
     }
 }
